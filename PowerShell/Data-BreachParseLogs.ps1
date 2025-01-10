@@ -103,7 +103,7 @@ function Match-MassDataLogFileExecution {
 	$items = Get-ChildItem -Path $directory -Recurse
 
 	$csvData = Import-Csv -Path $outputCsv
-	$executionIdentifiers = $csvData | Select-Object -ExpandProperty EX | Sort-Object -Unique
+	$executionIdentifiers = $csvData | Select-Object -ExpandProperty executionID | Sort-Object -Unique
 
 	foreach ($item in $items) {
 		if ($item.PSIsContainer) {
