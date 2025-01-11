@@ -3,7 +3,7 @@
 Before you begin, ensure you have the following:
 
 - **PowerShell 5.1 or higher**: The script requires at least Windows PowerShell 5.1. (PowerShell 7+ untested at this time but it might work)
-- **Log files**: A directory containing the `ps-log-audit*.log` and `mass-data*.log` files.
+- **Log files**: A directory containing the `ps-log-audit*.log` and `mass-data*.log` files. The subfolders can be zipped or unzipped it shouldn't matter
 
 ## Downloading the Script
 
