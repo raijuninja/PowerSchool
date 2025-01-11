@@ -13,7 +13,7 @@ $outputCsv = Join-Path -Path $LogFilePath -ChildPath "log_search_results.csv"
 
 # Initialize the CSV file if it doesn't exist
 if (-not (Test-Path -Path $outputCsv)) {
-    "File,IP,URL,executionID,Line,Execution_Data_1" | Out-File -FilePath $outputCsv
+    "File,IP,URL,executionID,Line" | Out-File -FilePath $outputCsv
 }
 
 # Extract zip files before processing
