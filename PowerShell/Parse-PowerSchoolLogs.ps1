@@ -1,7 +1,7 @@
 # Prompt the user to input the path to the logs directory
 $logDirectory = Read-Host "Please enter the path to the logs directory"
 
-# Define the array of strings to search for in the initial logs
+# Define the array of strings to search for in the initial logs (Must Match All)
 $searchStrings = @("UID=200A0", "/ws/md/v1/massdata/executeExport") # Maintenance Accounts performing Data Export Manager Functions
 
 # Define the output CSV file
