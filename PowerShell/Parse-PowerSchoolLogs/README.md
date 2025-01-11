@@ -44,4 +44,4 @@ This will download all the files in the repository, including `Parse-PowerSchool
 
 4. Watch the action happen in your log directory
 
-5. The results will be captured in a file titled `log_search_results.csv` in the root of your log folder
+5. The results will be captured in a file titled `log_search_results.csv` in the root of your log folder. Try not to open it until the script completes as the code might not be able to write to the file if its currently in use.
