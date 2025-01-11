@@ -1,19 +1,25 @@
-# Prompt the user to input the path to the logs directory
-$logDirectory = Read-Host "Please enter the path to the logs directory"
+param (
+	[string]$LogFilePath
+)
+
+# Prompt the user to input the path to the logs directory if not provided as a parameter
+if (-not $LogFilePath) {
+	$LogFilePath = Read-Host "Please enter the path to the logs directory"
+}
 
 # Define the array of strings to search for in the initial logs (Must Match All)
 $searchStrings = @("UID=200A0", "/ws/md/v1/massdata/executeExport") # Maintenance Accounts performing Data Export Manager Functions
 
 # Define the output CSV file
-$outputCsv = Join-Path -Path $logDirectory -ChildPath "log_search_results.csv"
+$outputCsv = Join-Path -Path $LogFilePath -ChildPath "log_search_results.csv"
 
 # Initialize the CSV file if it doesn't exist
 if (-not (Test-Path -Path $outputCsv)) {
-	"File,IP,URL,executionID,Line" | Out-File -FilePath $outputCsv
+	"File,IP,URL,executionID,Line,Execution_Data_1" | Out-File -FilePath $outputCsv
 }
 
 # Extract zip files before processing
-$items = Get-ChildItem -Path $logDirectory -Recurse
+$items = Get-ChildItem -Path $LogFilePath -Recurse
 
 foreach ($item in $items) {
 	if ($item.PSIsContainer) {
@@ -31,7 +37,7 @@ foreach ($item in $items) {
 	}
 	elseif ($item.Extension -eq ".zip") {
 		# If the item is a zip file, extract it
-		$extractPath = Join-Path -Path $logDirectory -ChildPath ($item.BaseName + "_extracted")
+		$extractPath = Join-Path -Path $LogFilePath -ChildPath ($item.BaseName + "_extracted")
 		if (-not (Test-Path -Path $extractPath)) {
 			Expand-Archive -Path $item.FullName -DestinationPath $extractPath -Force
 		}
@@ -117,9 +123,9 @@ function Match-MassDataLogFileExecution {
 						# Update the CSV data with the execution data
 						foreach ($row in $csvData) {
 							if ($row.executionID -eq $executionID) {
-								$executionColumns = $row.PSObject.Properties.Name -match "^Execution_\d+$"
+								$executionColumns = $row.PSObject.Properties.Name -match "^Execution_Data_\d+$"
 								$nextColumnIndex = ($executionColumns | Measure-Object).Count + 1
-								$nextColumnName = "Execution_$nextColumnIndex"
+								$nextColumnName = "Execution_Data_$nextColumnIndex"
 								$row | Add-Member -MemberType NoteProperty -Name $nextColumnName -Value $executionData
 							}
 						}
@@ -134,7 +140,7 @@ function Match-MassDataLogFileExecution {
 }
 
 # Process the initial log files to capture IP, URL, and EX values
-Process-PSAuditLogFiles -directory $logDirectory
+Process-PSAuditLogFiles -directory $LogFilePath
 
 # Search the different set of log files for matching EX values and update the CSV with execution data
-Match-MassDataLogFileExecution -directory $logDirectory
+Match-MassDataLogFileExecution -directory $LogFilePath
