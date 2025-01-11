@@ -39,13 +39,10 @@ This will download all the files in the repository, including `Parse-PowerSchool
 
 3. **Run the script**:
 	```powershell
-	.\Parse-PowerSchoolLogs.ps1 -LogFilePath "C:\path\to\your\logFileDirectory"
+	.\Parse-PowerSchoolLogs.ps1 -LogFilePath "C:\path\to\your\logFileDirectory" -SearchStrings "UID=200A0", "/ws/md/v1/massdata/executeExport"
 	```
+	> **Note**: If the `-LogFilePath` parameter is not provided, the script will prompt the user to input the path to the logs directory. If the `-SearchStrings` parameter is not provided, the script will use the default search strings "UID=200A0", "/ws/md/v1/massdata/executeExport". Those defaults search for Maintenance Accounts that ran a Data Export Manager job.
 
-	> **Note**: The `LogFilePath` directory should contain the zipped or unzipped log folders with the `.log` files inside.
+4. Watch the action happen in your log directory
 
-The script will generate a CSV file named `log-results.csv` in the root of your log directory. This CSV file will contain the parsed log data, including columns for Filename where the hit existed, IP, URL, executionID, Line info, and all associated actions with the same ID. Multiple actions should append a new column. If they try more than once, each attempt should be captured in a new column.
-
-Here's what my log directory looks like:
-
-![Log Directory](logdirectory.png)
+5. The results will be captured in a file titled `log_search_results.csv` in the root of your log folder
