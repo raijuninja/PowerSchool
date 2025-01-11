@@ -16,7 +16,8 @@ To download the `Parse-PowerSchoolLogs.ps1` script from GitHub, follow these ste
 3. **Download the script**:
 	- Click on the file name to open it.
 	- Click the "Download Raw File" button to view the raw file.
-	- You may receive a warning that the file is potentially harmful. This is a standard warning for script files. Confirm that you want to download the file. Click `Keep` to download the script file
+	- You may receive a warning that the file is potentially harmful. This is a standard warning for script files. Confirm that you want to download the file. Click `Keep` to download the script file.
+	- **Unblock the file**: After downloading, right-click the file, select `Properties`, and check the `Unblock` option if it is present. This step may be necessary based on your execution policy settings.
 
 Alternatively, you can clone the entire repository using Git:
 
