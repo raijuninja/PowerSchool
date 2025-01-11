@@ -9,7 +9,7 @@ $outputCsv = Join-Path -Path $logDirectory -ChildPath "log_search_results.csv"
 
 # Initialize the CSV file if it doesn't exist
 if (-not (Test-Path -Path $outputCsv)) {
-	"File,IP,URL,executionID,Line,Execution_Data" | Out-File -FilePath $outputCsv
+	"File,IP,URL,executionID,Line" | Out-File -FilePath $outputCsv
 }
 
 # Extract zip files before processing
@@ -29,7 +29,7 @@ foreach ($item in $items) {
 			}
 		}
 	}
- elseif ($item.Extension -eq ".zip") {
+	elseif ($item.Extension -eq ".zip") {
 		# If the item is a zip file, extract it
 		$extractPath = Join-Path -Path $logDirectory -ChildPath ($item.BaseName + "_extracted")
 		if (-not (Test-Path -Path $extractPath)) {
@@ -44,16 +44,11 @@ function Process-PSAuditLogFiles {
 		[string]$directory
 	)
 
-	# Get all log files and subdirectories in the specified directory
+	# Get all the files in the directory
 	$items = Get-ChildItem -Path $directory -Recurse
 
 	foreach ($item in $items) {
-		if ($item.PSIsContainer) {
-			# If the item is a directory, recursively process it
-			Process-PSAuditLogFiles -directory $item.FullName
-		}
-		elseif ($item.Name -like "ps-log-audit*") {
-
+		if ($item.Name -like "ps-log-audit*") {
 			# Inform the user of the current file in the loop
 			Write-Output "Processing log entries in: $($item.FullName)"
 
@@ -106,11 +101,7 @@ function Match-MassDataLogFileExecution {
 	$executionIdentifiers = $csvData | Select-Object -ExpandProperty executionID | Sort-Object -Unique
 
 	foreach ($item in $items) {
-		if ($item.PSIsContainer) {
-			# If the item is a directory, recursively process it
-			Match-MassDataLogFileExecution -directory $item.FullName
-		}
-		elseif ($item.Name -like "mass-data*.log") {
+		if ($item.Name -like "mass-data*.log") {
 			# If the item is a log file, read and process it
 			$logContent = Get-Content -Path $item.FullName -Raw
 			$logEntries = $logContent -split "(?=\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} \[Web Handler \d+ - EX=)"
@@ -125,13 +116,11 @@ function Match-MassDataLogFileExecution {
 
 						# Update the CSV data with the execution data
 						foreach ($row in $csvData) {
-							if ($row.EX -eq $executionID) {
-								if ($row.execution_data) {
-									$row.execution_data += " | " + $executionData
-								}
-								else {
-									$row.execution_data = $executionData
-								}
+							if ($row.executionID -eq $executionID) {
+								$executionColumns = $row.PSObject.Properties.Name -match "^Execution_\d+$"
+								$nextColumnIndex = ($executionColumns | Measure-Object).Count + 1
+								$nextColumnName = "Execution_$nextColumnIndex"
+								$row | Add-Member -MemberType NoteProperty -Name $nextColumnName -Value $executionData
 							}
 						}
 					}
