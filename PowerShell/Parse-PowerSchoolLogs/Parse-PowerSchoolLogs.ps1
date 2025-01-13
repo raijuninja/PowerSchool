@@ -112,7 +112,7 @@ function Match-MassDataLogFileExecution {
 			# Search all chunks for the new EX value using the resultant CSV
 			foreach ($log in $logEntries) {
 				foreach ($executionID in $executionIdentifiers) {
-					if ($log -like "*EX=$executionID*") {
+					if ($log -like "*$executionID*") {
 						Write-Output "File: $($item.FullName)`nEX: $executionID`nLine: $log"
 						$csvChunk = $log -replace "`n", " " -replace "`r", ""
 						$executionData = $csvChunk
