@@ -33,7 +33,7 @@ This will download all the files in the repository, including `Parse-PowerSchool
 
 2. **Navigate to the script directory**:
 	```powershell
-	cd "C:/path/to/script/"
+	cd "C:/path/to/scriptdirectory/"
 	```
 
 3. **Run the script**:
